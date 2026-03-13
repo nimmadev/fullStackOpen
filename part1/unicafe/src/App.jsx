@@ -1,34 +1,45 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+const Heading = ({ text }) => <h1>{text}</h1>
+
+const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
+
+const StatisticLine = ({ text, value }) => <tr><td>{text}</td><td>{value}</td></tr>
+const Statistics = ({ good, neutral, bad }) => {
+  const total = good + neutral + bad
+  const average = (good - bad) / total
+  const positive = (good / total) * 100
+  if (total === 0) return <p>No feedback given</p>
+  return <table>
+    <tbody>
+      <StatisticLine text={'good'} value={good} />
+      <StatisticLine text={'neutral'} value={neutral} />
+      <StatisticLine text={'bad'} value={bad} />
+      <StatisticLine text={'all'} value={total} />
+      <StatisticLine text={'average'} value={average} />
+      <StatisticLine text={'positive'} value={positive + ' %'} />
+    </tbody>
+
+  </table>
+}
+const App = () => {
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+  const onGoodFeedback = () => setGood(good + 1)
+  const onNeutralFeedback = () => setNeutral(neutral + 1)
+  const onBadFeedback = () => setBad(bad + 1)
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <Heading text={'give feedback'} />
+      <Button text={'good'} onClick={onGoodFeedback} />
+      <Button text={'neutral'} onClick={onNeutralFeedback} />
+      <Button text={'bad'} onClick={onBadFeedback} />
+      <Heading text={'statistics'} />
+      <Statistics good={good} neutral={neutral} bad={bad} />
+    </div>
   )
 }
 
