@@ -1,26 +1,39 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Filter from '../components/Filter'
 import PersonForm from '../components/PersonForm'
 import Persons from '../components/Person'
+import personService from './services/persons'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+
+  useEffect(() => {
+    personService
+      .getAll()
+      .then(data => setPersons(data))
+  }, [])
   const onAdd = (e) => {
     e.preventDefault()
+    console.log(newName)
+    console.log(persons)
     const exists = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
     if (exists) {
-      alert(`${newName} is already added to phonebook`)
+      const result = confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+      if (result) {
+        personService.updatePerson({ ...exists, name: newName, number: newNumber })
+          .then(data => setPersons(persons.map(p => p.id === data.id ? data : p)))
+      }
+      setNewName('')
+      setNewNumber('')
       return
     }
-    setPersons(persons.concat([{ name: newName, number: newNumber, id: persons.length + 1 }]))
+    personService
+      .creratePerson({ name: newName, number: newNumber })
+      .then(data => setPersons(persons.concat([data])))
+
     setNewName('')
     setNewNumber('')
   }
@@ -32,7 +45,7 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm onAdd={onAdd} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} />
       <h2>Numbers</h2>
-      <Persons filterPersons={filterPersons} />
+      <Persons setPersons={setPersons} filterPersons={filterPersons} deletePerson={personService.deletePerson} />
     </div>
   )
 }

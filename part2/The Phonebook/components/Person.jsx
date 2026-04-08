@@ -1,6 +1,19 @@
-const Persons = ({ filterPersons }) => {
+const Persons = ({ setPersons, filterPersons, deletePerson }) => {
+    const onDelete = (person) => {
+        const result = confirm(`delete ${person.name}`)
+        if (result) {
+            console.log(person)
+            deletePerson(person.id)
+                .then(data => setPersons((persons) => persons.filter(p => p.id !== data.id)));
+        }
+    }
     return <div>
-        {filterPersons.map((person) => <p key={person.id}>{person.name} {person.number}</p>)}
+        {filterPersons.map((person) => {
+            return <div key={person.id} style={{ display: 'flex', alignItems: 'center' }}>
+                <p >{person.name} {person.number}</p>
+                <button onClick={() => onDelete(person)}>delete </button>
+            </div>
+        })}
     </div>
 }
 
