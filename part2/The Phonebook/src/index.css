@@ -1,0 +1,13 @@
+.base-error {
+    font-size: 22px;
+    font-weight: 400;
+    padding: 3px;
+    margin-bottom: 10px;
+}
+
+.success {
+    border: 2px solid green;
+}
+.error {
+    border: 2px solid red;
+}

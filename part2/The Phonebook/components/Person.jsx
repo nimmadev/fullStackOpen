@@ -1,10 +1,13 @@
-const Persons = ({ setPersons, filterPersons, deletePerson }) => {
+const Persons = ({ setPersons, filterPersons, deletePerson, setNewMesage }) => {
     const onDelete = (person) => {
         const result = confirm(`delete ${person.name}`)
         if (result) {
             console.log(person)
             deletePerson(person.id)
-                .then(data => setPersons((persons) => persons.filter(p => p.id !== data.id)));
+                .then(data => {
+                    setPersons((persons) => persons.filter(p => p.id !== data.id))
+                    setNewMesage(`Information deleted for ${person.name}`, true)
+                });
         }
     }
     return <div>
