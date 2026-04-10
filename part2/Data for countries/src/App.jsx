@@ -260,9 +260,6 @@ function App() {
     "british virgin islands"
   ])
 
-
-  // useEffect(() => fetchCountries(), [])
-
   const filterCountries = filter ? countries.filter(c => c.includes(filter.toLowerCase())) : []
   return countries &&
     <div>

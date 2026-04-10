@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import Languages from './Languages'
+import CountryWeather from './CountryWeather'
 
 const CountryName = ({ country }) => {
     return <div className="country">
@@ -22,10 +23,7 @@ const ShowCountry = ({ name }) => {
 
     }
     useEffect(() => fetchCountry(name), [])
-    // const [lat, lon] = country?.latlng || []
-    // const weatherKey = import.meta.env.VITE_SOME_KEY
-    // const weatherApiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${weatherKey}`
-    // console.log(weatherApiUrl)
+
     return country && (
         <div>
             <CountryName country={country} />
@@ -34,6 +32,7 @@ const ShowCountry = ({ name }) => {
             <div className="flag">
                 <img src={country.flags.png} alt="flag" />
             </div>
+            <CountryWeather country={country} />
         </div>
     )
 }
