@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = 'http://localhost:3001'
+const baseUrl = 'https://petite-mindy-aisubs-7101bedc.koyeb.app/api'
 const getAll = () => {
     const request = axios.get(`${baseUrl}/persons`)
     return request.then(response => response.data)

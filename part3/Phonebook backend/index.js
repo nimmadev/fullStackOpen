@@ -1,11 +1,14 @@
 const express = require('express')
 const data = require('./data')
 var morgan = require('morgan')
+const cors = require('cors')
 
 morgan.token('body', (req) => req.body ? JSON.stringify(req.body) : '' )
 const logger = morgan(':method :url :status :res[content-length] - :response-time ms :body')
 const app = express()
+app.use(cors())
 
+app.use(express.static('dist'))
 let persons = data
 app.use(express.json())
 
@@ -74,6 +77,6 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint)
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 console.log('app is runnig')
-app.listen(3001)
+app.listen(PORT)

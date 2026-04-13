@@ -48,7 +48,6 @@ const App = () => {
     setNewName('')
     setNewNumber('')
   }
-  const filterPersons = filter ? persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase())) : persons
   return (
     <div>
       <h2>Phonebook</h2>
@@ -58,7 +57,7 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm onAdd={onAdd} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} />
       <h2>Numbers</h2>
-      <Persons setPersons={setPersons} filterPersons={filterPersons} deletePerson={personService.deletePerson} setNewMesage={setNewMesage} />
+      <Persons setPersons={setPersons} filter={filter} persons={persons} deletePerson={personService.deletePerson} setNewMesage={setNewMesage} />
     </div>
   )
 }
