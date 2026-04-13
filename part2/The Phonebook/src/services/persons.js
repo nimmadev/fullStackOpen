@@ -1,5 +1,6 @@
 import axios from "axios";
-const baseUrl = 'https://petite-mindy-aisubs-7101bedc.koyeb.app/api'
+console.log(import.meta.env)
+const baseUrl = import.meta.env.VITE_WEBSIT || 'https://petite-mindy-aisubs-7101bedc.koyeb.app/api'
 const getAll = () => {
     const request = axios.get(`${baseUrl}/persons`)
     return request.then(response => response.data)
