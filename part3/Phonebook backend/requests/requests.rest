@@ -2,13 +2,13 @@
 GET http://localhost:3001/api/persons 
 
 ### get single person
-GET http://localhost:3001/api/persons/1
+GET http://localhost:3001/api/persons/69de2ce8b9b9929d5aac3418
 
 ### get single person error 
-GET http://localhost:3001/api/persons/100000 
+GET http://localhost:3001/api/persons/69de2ce8b9b992d5aac3418 
 
 ### delete a single person 
-DELETE  http://localhost:3001/api/persons/1
+DELETE  http://localhost:3001/api/persons/69dede9d4a15a4cce546eed6
 
 ### create a single person 
 POST  http://localhost:3001/api/persons
@@ -19,5 +19,17 @@ Content-Type: application/json
     "number": "67678987"
 }
 
+### update a person
+PUT  http://localhost:3001/api/persons/69dedfa0f2b8c91ff3f89b6c
+Content-Type: application/json
+
+{
+    "name": "nimma",
+    "number": "9999"
+}
+
 ### info
 GET http://localhost:3001/info
+
+### unkown
+GET http://localhost:3001/unkown

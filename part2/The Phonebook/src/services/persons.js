@@ -1,6 +1,6 @@
 import axios from "axios";
 console.log(import.meta.env)
-const baseUrl = import.meta.env.VITE_WEBSIT || 'https://petite-mindy-aisubs-7101bedc.koyeb.app/api'
+const baseUrl = import.meta.env.VITE_WEBSITE || process.env.WEBSITE || 'http://localhost:3001/api'
 const getAll = () => {
     const request = axios.get(`${baseUrl}/persons`)
     return request.then(response => response.data)
@@ -13,8 +13,8 @@ const creratePerson = (data) => {
     const request = axios.post(`${baseUrl}/persons/`, data)
     return request.then(response => response.data)
 }
-const deletePerson  = (id) => {
+const deletePerson = (id) => {
     const request = axios.delete(`${baseUrl}/persons/${id}`)
     return request.then(response => response.data)
 }
-export default {getAll, creratePerson, updatePerson, deletePerson}
+export default { getAll, creratePerson, updatePerson, deletePerson }
