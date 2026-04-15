@@ -1,6 +1,6 @@
 import axios from "axios";
 console.log(import.meta.env)
-const baseUrl = import.meta.env.VITE_WEBSITE || process.env.WEBSITE || 'http://localhost:3001/api'
+const baseUrl = import.meta.env.VITE_WEBSITE || process.env.WEBSITE || 'https://petite-mindy-aisubs-7101bedc.koyeb.app/api'
 const getAll = () => {
     const request = axios.get(`${baseUrl}/persons`)
     return request.then(response => response.data)
