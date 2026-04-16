@@ -15,16 +15,16 @@ POST  http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-    "name": "nimma",
-    "number": "67678987"
+    "name": "ndssda",
+    "number": "67-6787"
 }
 
 ### update a person
-PUT  http://localhost:3001/api/persons/69dedfa0f2b8c91ff3f89b6c
+PUT  http://localhost:3001/api/persons/69deea7e98e589ffd7743cdf
 Content-Type: application/json
 
 {
-    "name": "nimma",
+    "name": "ni",
     "number": "9999"
 }
 

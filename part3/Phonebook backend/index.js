@@ -56,7 +56,7 @@ app.put('/api/persons/:id', (req, res, next) => {
         else {
             person.name = name
             person.number = number
-            return person.save().then(result => res.json(result))
+            return person.save().then(result => res.json(result)).catch(error => next(error))
         }
     }).catch(error => next(error))
 })
@@ -69,7 +69,7 @@ app.delete('/api/persons/:id', (req, res) => {
 
 // create a person
 const randomIdGenrator = () => Math.floor(Math.random() * 1000000000)
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const body = req.body
     const data = {}
     // check if both name and number is present
@@ -84,7 +84,9 @@ app.post('/api/persons', (req, res) => {
                 data.name = body.name
                 data.number = body.number
                 const person = new Person(data)
-                person.save().then(result => res.json(result))
+                person.save()
+                    .then(result => res.json(result))
+                    .catch(error => next(error))
             }
         })
 
@@ -110,6 +112,8 @@ const errorHandler = (error, request, response, next) => {
 
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).send({ error: error.message })
     }
 
     next(error)

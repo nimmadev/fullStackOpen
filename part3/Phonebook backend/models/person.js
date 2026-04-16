@@ -12,8 +12,21 @@ mongoose.connect(dbUrl, { family: 4 })
 mongoose.set('strictQuery', false)
 
 const personSchema = mongoose.Schema({
-    name: String,
-    number: String
+    name: {
+        type: String,
+        minLength: 3
+    },
+    number: {
+        type: String,
+        minLength: 8,
+        validate: {
+
+            validator: function (value) {
+                return /\d{2,3}-\d+/gm.test(value);
+            },
+            message: 'number format xx-xxxxxx'
+        }
+    }
 })
 mongoose.set('toJSON', {
     transform: (document, returnOb) => {

@@ -35,7 +35,7 @@ const App = () => {
             setPersons(persons.map(p => p.id === data.id ? data : p))
             setNewMesage(`updated number for ${exists.name}`, true)
           })
-          .catch(e => setNewMesage(`Information for ${exists.name} has already been removed from server `, false))
+          .catch(error => setNewMesage(error.response?.data?.error || `Information for ${exists.name} has already been removed from server `, false))
       }
       setNewName('')
       setNewNumber('')
@@ -43,8 +43,15 @@ const App = () => {
     }
     personService
       .creratePerson({ name: newName, number: newNumber })
-      .then(data => setPersons(persons.concat([data])))
-    setNewMesage(`created number for ${newName}`, true)
+      .then(data => {
+        setPersons(persons.concat([data]))
+        setNewMesage(`created number for ${newName}`, true)
+      })
+      .catch(error => {
+        console.log(error.response?.data?.error)
+        setNewMesage(error.response?.data?.error || 'something went wrong', false)
+      })
+
     setNewName('')
     setNewNumber('')
   }
