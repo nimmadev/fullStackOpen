@@ -4,10 +4,9 @@ const { test, after, beforeEach } = require('node:test')
 const assert = require('node:assert')
 const { default: mongoose } = require('mongoose')
 const helper = require('./app_helper')
-const { send } = require('node:process')
 
 beforeEach(async () => {
-  await helper.freshDb()
+  await helper.freshBlogDb()
 })
 const api = supertest(app)
 
@@ -59,7 +58,7 @@ test('api create a new blog with 0 like if likes is missing', async () => {
     .send({
       title: 'test api subject',
       author: 'Robert C. Martin',
-      url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+      url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html'
     })
     .expect(201)
 

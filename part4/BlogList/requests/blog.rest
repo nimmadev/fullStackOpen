@@ -4,10 +4,16 @@ GET http://localhost:3001/api/blogs
 ### create a blog
 POST  http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb290IiwiaWQiOiI2OWY2MmY5NTcyOGUwZmI3OTc2MGE3NjYiLCJpYXQiOjE3Nzc3NDYyNjgsImV4cCI6MTc3Nzc0OTg2OH0.EwInS2H3xATeXPhqjbzbfS7c4d-pSoRMWCi-I1-X8oU
 
 {
-  "title": "test",
+  "title": "test 2",
   "author": "nimma",
   "url" : "test",
   "likes": 30
 }
+
+### delete a blog
+DELETE  http://localhost:3001/api/blogs/69f64935d4a8bfb15827fd3d
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb290IiwiaWQiOiI2OWY2MmY5NTcyOGUwZmI3OTc2MGE3NjYiLCJpYXQiOjE3Nzc3NDYyNjgsImV4cCI6MTc3Nzc0OTg2OH0.EwInS2H3xATeXPhqjbzbfS7c4d-pSoRMWCi-I1-X8oU
