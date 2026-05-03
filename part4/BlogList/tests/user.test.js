@@ -43,7 +43,7 @@ describe('In fresh db', async () => {
       })
       .expect(400)
     const userEnd = await helper.usersInDb()
-    assert.strictEqual(userEnd.length, userStart.length)
+    assert.strictEqual(userStart.length, userEnd.length,)
   })
 })
 

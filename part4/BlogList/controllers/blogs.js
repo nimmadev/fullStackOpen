@@ -47,7 +47,12 @@ BlogRouter.delete('/:id', async (request, response) => {
 })
 
 BlogRouter.put('/:id', async (request, response) => {
+  const user = request.user
   const id = request.params.id
+
+  if (!user.blogs.includes(id)) {
+    return response.status(401).json({ error: 'invalid request' })
+  }
   const { title, author, url, likes } = request.body
 
   const blog = await Blog.findById(id)

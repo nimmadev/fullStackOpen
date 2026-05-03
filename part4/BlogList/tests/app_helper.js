@@ -1,6 +1,6 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
-const initalPersons = [
+let initalPersons = [
   {
     title: 'React patterns',
     author: 'Michael Chan',
@@ -40,8 +40,12 @@ const initalPersons = [
 ]
 
 const freshBlogDb = async () => {
+  const savedUser = await User.findOne({ username: 'test' })
+  initalPersons = initalPersons.map(person => ({ ...person, user: savedUser._id }))
   await Blog.deleteMany({})
-  await Blog.insertMany(initalPersons)
+  const blogs = await Blog.insertMany(initalPersons)
+  savedUser.blogs = blogs.map(bl => bl._id)
+  await savedUser.save()
 }
 
 const blogsInDb = async () => {
@@ -51,7 +55,7 @@ const blogsInDb = async () => {
 
 
 const freshUserDb = async () => {
-  await User.deleteMany()
+  await User.deleteMany({})
 }
 const usersInDb = async () => {
   const users = await User.find({})
