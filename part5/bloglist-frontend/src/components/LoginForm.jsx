@@ -1,5 +1,6 @@
 import { useState } from "react"
 import loginService from "../services/login"
+import blogsService from "../services/blogs"
 const LoginForm = ({ setUser }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -10,6 +11,7 @@ const LoginForm = ({ setUser }) => {
     const data = await loginService.login({ username, password })
     setUser(data)
     window.localStorage.setItem('xyz', JSON.stringify(data))
+    blogsService.setToken(data.token)
   }
   return < form onSubmit={handleLogin}>
     <h1>log in to application</h1>
