@@ -52,7 +52,7 @@ const App = () => {
       <h2>blogs</h2>
       <Notification Message={message.message} Success={message.success} />
       <p>{user.name} Logged in <span onClick={Logout}>logout</span></p>
-      <Togglable buttonLabel={"create new blog"} ref={createForm} >
+      <Togglable buttonLabel={'create new blog'} ref={createForm} >
         <CreateBlogForm setMessage={setNewMesage} setBlogs={setBlogs} createRef={createForm} />
       </Togglable>
       {

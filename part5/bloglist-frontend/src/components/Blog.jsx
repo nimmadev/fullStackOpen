@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 import blogService from '../services/blogs'
 
 const Blog = ({ blog, user }) => {
@@ -22,7 +22,7 @@ const Blog = ({ blog, user }) => {
       }
     }
     catch (e) {
-      console.log(e, 'error');
+      console.log(e, 'error')
 
     }
   }
