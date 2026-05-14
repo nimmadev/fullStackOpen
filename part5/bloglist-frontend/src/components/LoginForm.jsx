@@ -1,17 +1,21 @@
 import { useState } from "react"
 import loginService from "../services/login"
 import blogsService from "../services/blogs"
-const LoginForm = ({ setUser }) => {
+const LoginForm = ({ setUser, setMessage }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
   const handleLogin = async (event) => {
     event.preventDefault()
-
-    const data = await loginService.login({ username, password })
-    setUser(data)
-    window.localStorage.setItem('xyz', JSON.stringify(data))
-    blogsService.setToken(data.token)
+    try {
+      const data = await loginService.login({ username, password })
+      setUser(data)
+      window.localStorage.setItem('xyz', JSON.stringify(data))
+      blogsService.setToken(data.token)
+    }
+    catch (e) {
+      setMessage(e.response.data.error, true)
+    }
   }
   return < form onSubmit={handleLogin}>
     <h1>log in to application</h1>

@@ -23,7 +23,8 @@ BlogRouter.post('/', async (request, response) => {
   const result = await blog.save()
   user.blogs = user.blogs.concat(result._id)
   await user.save()
-  response.status(201).json(result)
+  const r = result.toJSON()
+  response.status(201).json({ ...r, user: { id: user.id, username: user.username, name: user.name } })
 })
 
 BlogRouter.delete('/:id', async (request, response) => {
@@ -47,19 +48,20 @@ BlogRouter.delete('/:id', async (request, response) => {
 })
 
 BlogRouter.put('/:id', async (request, response) => {
-  const user = request.user
+  // const user = request.user
   const id = request.params.id
 
-  if (!user.blogs.includes(id)) {
-    return response.status(401).json({ error: 'invalid request' })
-  }
-  const { title, author, url, likes } = request.body
+  // if (!user.blogs.includes(id)) {
+  //   return response.status(401).json({ error: 'invalid request' })
+  // }
+  const { title, author, url, likes, user } = request.body
 
   const blog = await Blog.findById(id)
   blog.title = title
   blog.author = author
   blog.url = url
   blog.likes = likes
+  blog.user = user
 
   const savedBlog = await blog.save()
   response.status(201).json(savedBlog)

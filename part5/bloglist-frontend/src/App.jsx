@@ -1,19 +1,27 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
 import CreateBlogForm from './components/CreateBlogFrom'
-
-
+import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
+  const [message, setMessage] = useState({ message: null, success: true })
+  const createForm = useRef()
+  const setNewMesage = (message, success) => {
+    setMessage({ message, success })
+    setTimeout(() => setMessage({ message: null, success: true }), 3000)
+
+  }
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
+    blogService.getAll().then(blogs => {
+      blogs.sort((a, b) => b.likes - a.likes)
       setBlogs(blogs)
-    )
+    })
   }, [])
 
   useEffect(() => {
@@ -30,9 +38,11 @@ const App = () => {
     window.localStorage.clear('xyz')
     setUser(null)
   }
+
   if (user === null) {
     return <div>
-      <LoginForm setUser={setUser} />
+      <Notification Message={message.message} Success={message.success} />
+      <LoginForm setUser={setUser} setMessage={setNewMesage} />
     </div>
   }
 
@@ -40,11 +50,14 @@ const App = () => {
     <div>
 
       <h2>blogs</h2>
+      <Notification Message={message.message} Success={message.success} />
       <p>{user.name} Logged in <span onClick={Logout}>logout</span></p>
-      <CreateBlogForm user={user} />
+      <Togglable buttonLabel={"create new blog"} ref={createForm} >
+        <CreateBlogForm setMessage={setNewMesage} setBlogs={setBlogs} createRef={createForm} />
+      </Togglable>
       {
         blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} user={user} />
         )
       }
     </div >
