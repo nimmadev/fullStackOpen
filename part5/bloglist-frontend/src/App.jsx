@@ -39,6 +39,28 @@ const App = () => {
     setUser(null)
   }
 
+  const updateLike = async (blog) => {
+    const { id, ...data } = { ...blog, user: blog.user.id, likes: blog.likes + 1 }
+    const result = await blogService.updateBlog(data, id)
+    return result
+  }
+  const handleCreate = async data => {
+    try {
+      const blog = await blogService.createBlog(data)
+      const message = `a new blog ${data.title} by ${data.author} added`
+      setMessage(message, true)
+      console.log(blog)
+      setBlogs(blogs => blogs.concat(blog))
+    } catch (e) {
+      console.log(e)
+      if (e.response.data.error === 'token expired') {
+        window.localStorage.clear('xyz')
+        navigation.reload()
+      }
+      setMessage(e.response.data.error, false)
+
+    }
+  }
   if (user === null) {
     return <div>
       <Notification Message={message.message} Success={message.success} />
@@ -53,11 +75,11 @@ const App = () => {
       <Notification Message={message.message} Success={message.success} />
       <p>{user.name} Logged in <span onClick={Logout}>logout</span></p>
       <Togglable buttonLabel={'create new blog'} ref={createForm} >
-        <CreateBlogForm setMessage={setNewMesage} setBlogs={setBlogs} createRef={createForm} />
+        <CreateBlogForm handleCreate={handleCreate} createRef={createForm} />
       </Togglable>
       {
         blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} user={user} />
+          <Blog key={blog.id} blog={blog} user={user} updateLike={updateLike} />
         )
       }
     </div >

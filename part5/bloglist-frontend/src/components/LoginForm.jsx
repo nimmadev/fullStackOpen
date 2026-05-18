@@ -1,6 +1,6 @@
-import { useState } from "react"
-import loginService from "../services/login"
-import blogsService from "../services/blogs"
+import { useState } from 'react'
+import loginService from '../services/login'
+import blogsService from '../services/blogs'
 const LoginForm = ({ setUser, setMessage }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')

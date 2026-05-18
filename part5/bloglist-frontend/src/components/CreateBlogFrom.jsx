@@ -1,33 +1,18 @@
-import { useState } from "react"
-import blogsService from "../services/blogs"
+import { useState } from 'react'
 
-const CreateBlogForm = ({ setMessage, setBlogs, createRef }) => {
+const CreateBlogForm = ({ handleCreate, createRef }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  const handleCreate = async (event) => {
+  const createBlog = async (event) => {
     event.preventDefault()
-    try {
-
-      const blog = await blogsService.createBlog({
-        title, author, url
-      })
-      const message = `a new blog ${title} by ${author} added`
-      setMessage(message, true)
-      console.log(blog)
-      setBlogs(blogs => blogs.concat(blog))
-      createRef.current.toggleVisibility()
-    } catch (e) {
-      if (e.response.data.error === 'token expired') {
-        window.localStorage.clear('xyz')
-        navigation.reload()
-      }
-      setMessage(e.response.data.error, false)
-
-    }
+    const data = { title, author, url }
+    await handleCreate(data)
+    createRef.current.toggleVisibility()
   }
-  return <form onSubmit={handleCreate}>
+
+  return <form onSubmit={createBlog}>
     <h1>create new</h1>
     <div>
       <label >title: <input type="text" value={title} onChange={({ target }) => setTitle(target.value)} /></label>

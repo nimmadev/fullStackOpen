@@ -1,17 +1,12 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog, user, updateLike }) => {
   const [likes, setlikes] = useState(blog.likes)
   const [isVisible, setIsVisible] = useState(false)
   const ToggleVisibilty = () => setIsVisible(!isVisible)
 
-  const updateLike = async () => {
-    const { id, ...data } = { ...blog, user: blog.user.id, likes: blog.likes + 1 }
-    const result = await blogService.updateBlog(data, id)
-    setlikes(result.likes)
 
-  }
   const deleteBlog = async () => {
     try {
       const confirm = window.confirm(`remove blog ${blog.title} by ${blog.author}`)
@@ -28,10 +23,12 @@ const Blog = ({ blog, user }) => {
   }
   const BlogDetail = () => {
     const isUser = blog.user.username === user.username
-    console.log(isUser, blog, user)
     return <>
       <p style={{ margin: 0 }}>{blog.url}</p>
-      <div>{likes} <button onClick={updateLike}>like</button></div>
+      <div>{likes} <button onClick={async () => {
+        const result = await updateLike(blog)
+        if (result) setlikes(result.likes)
+      }}>like</button></div>
       <p style={{ margin: 0 }}>{blog.user.name}</p>
       {isUser && <button onClick={deleteBlog} style={{ background: 'red' }}>delete</button>}
     </>
@@ -44,7 +41,7 @@ const Blog = ({ blog, user }) => {
     marginBottom: 5,
   }
   return <div style={blogStyle}>
-    {blog.title} {blog.author} <button onClick={ToggleVisibilty}>{isVisible ? 'hide' : 'show'}</button>
+    {blog.title} {blog.author}<button onClick={ToggleVisibilty}>{isVisible ? 'hide' : 'show'}</button>
     {isVisible && <BlogDetail />}
   </div>
 }
