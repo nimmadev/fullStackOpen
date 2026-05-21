@@ -1,0 +1,115 @@
+const { test, expect, describe, beforeEach } = require('@playwright/test')
+const { title } = require('node:process')
+
+const LoginUser = async (page, username, password) => {
+  await page.getByLabel('username').fill(username)
+  await page.getByLabel('password').fill(password)
+  await page.getByRole('button').click()
+}
+
+const CreateBlog = async (page, data) => {
+  await page.getByRole('button', { name: 'create new blog' }).click()
+  await expect(page.getByText('create new')).toBeVisible()
+  await page.getByLabel('title:').fill(data.title)
+  await page.getByLabel('author:').fill(data.author)
+  await page.getByLabel('url:').fill(data.url)
+  await page.getByRole('button', { name: 'create' }).click()
+}
+describe('Blog App', () => {
+  beforeEach(async ({ page, request }) => {
+    // setup db reset
+    await request.post('/api/testing/reset')
+    await request.post('/api/users', {
+      data: {
+        username: 'nimma1',
+        name: 'nimma',
+        password: 'nimmanimma'
+      }
+    })
+
+    await page.goto('/')
+  })
+
+  test('Login form is shown', async ({ page }) => {
+    await expect(page.getByText('log in to application')).toBeVisible()
+  })
+
+  describe('Login', () => {
+    test('succeeds with correct credentials', async ({ page }) => {
+      await LoginUser(page, 'nimma1', 'nimmanimma')
+
+      await expect(page.getByText('nimma Logged in logout')).toBeVisible()
+    })
+    test('fails with wrong credentials', async ({ page }) => {
+      await LoginUser(page, 'nimma', 'nimmanimma')
+      const errorText = page.getByText('invalid username or password')
+      await expect(errorText).toBeVisible()
+      await expect(errorText).toHaveClass('base-message error')
+    })
+  })
+
+  describe('When logged in', () => {
+    beforeEach(async ({ page }) => {
+      await LoginUser(page, 'nimma1', 'nimmanimma')
+      await expect(page.getByText('nimma Logged in logout')).toBeVisible()
+    })
+
+    test('a new blog can be created', async ({ page }) => {
+
+
+      await CreateBlog(page, { title: 'test blog', author: 'nimma', url: 'test' })
+      await expect(page.getByText('test blog nimma')).toBeVisible()
+      await expect(page.getByText('a new blog test blog by nimma')).toBeVisible()
+    })
+
+    test('a blog can be liked', async ({ page }) => {
+      await CreateBlog(page, { title: 'test blog', author: 'nimma', url: 'test' })
+      await page.getByText('show').click()
+      await page.getByText('like').click()
+      await expect(page.getByText('1')).toBeVisible()
+
+    })
+
+    test('a blog can be deleted', async ({ page }) => {
+      await CreateBlog(page, { title: 'test blog', author: 'nimma', url: 'test' })
+      await page.getByText('show').click()
+      page.once('dialog', dialog => dialog.accept());
+      await page.getByText('delete').click()
+      await expect(page.getByText('test blog nimma')).toBeHidden()
+    })
+
+    test('only blog owner see delete button', async ({ page, request }) => {
+      await CreateBlog(page, { title: 'test blog', author: 'nimma', url: 'test' })
+      await expect(page.getByText('test blog nimma')).toBeVisible()
+
+      await page.getByText('logout').click()
+      await request.post('/api/users', {
+        data: {
+          username: 'nimma',
+          name: 'nimma',
+          password: 'nimmanimma'
+        }
+      })
+      await LoginUser(page, 'nimma', 'nimmanimma')
+      await expect(page.getByText('nimma Logged in logout')).toBeVisible()
+      await page.getByText('show').click()
+      await expect(page.getByText('delete')).toBeHidden()
+    })
+
+    test('blog are orderd by like', async ({ page }) => {
+      await CreateBlog(page, { title: 'test blog', author: 'nimma', url: 'test' })
+      await CreateBlog(page, { title: 'test blog', author: 'nimma', url: 'test' })
+      await CreateBlog(page, { title: 'test blog9', author: 'nimma', url: 'test' })
+
+      await page.getByText(/show/).first().click()
+      await page.getByText(/show/).nth(1).click()
+      await page.getByText(/show/).last().click()
+      await page.getByText('like').last().click()
+      await page.goto('/')
+      await page.getByText('show').first().click()
+      await expect(page.getByText('1')).toBeVisible()
+
+
+    })
+  })
+})

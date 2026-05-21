@@ -14,7 +14,7 @@ const LoginForm = ({ setUser, setMessage }) => {
       blogsService.setToken(data.token)
     }
     catch (e) {
-      setMessage(e.response.data.error, true)
+      setMessage(e.response.data.error, false)
     }
   }
   return < form onSubmit={handleLogin}>

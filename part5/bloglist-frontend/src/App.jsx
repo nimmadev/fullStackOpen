@@ -42,22 +42,27 @@ const App = () => {
   const updateLike = async (blog) => {
     const { id, ...data } = { ...blog, user: blog.user.id, likes: blog.likes + 1 }
     const result = await blogService.updateBlog(data, id)
+    console.log(result)
+    console.log(blogs)
+    let blo = blogs.map(b => b.id === blog.id ? blog : b)
+    blo.sort((a, b) => b.likes - a.likes)
+    setBlogs(blo)
     return result
   }
   const handleCreate = async data => {
     try {
       const blog = await blogService.createBlog(data)
       const message = `a new blog ${data.title} by ${data.author} added`
-      setMessage(message, true)
-      console.log(blog)
+      setNewMesage(message, true)
       setBlogs(blogs => blogs.concat(blog))
     } catch (e) {
       console.log(e)
       if (e.response.data.error === 'token expired') {
+        setNewMesage(e.response.data.error, false)
         window.localStorage.clear('xyz')
         navigation.reload()
       }
-      setMessage(e.response.data.error, false)
+      console.log(e)
 
     }
   }

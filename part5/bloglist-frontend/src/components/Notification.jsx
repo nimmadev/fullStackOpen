@@ -1,7 +1,7 @@
 const Notification = ({ Message, Success }) => {
-  if (Message === null) return null
+  if (Message === null || Message === undefined) return null
 
-  return <div className={`base-error ${Success ? 'success' : 'error'}`}>
+  return <div className={`base-message ${Success ? 'success' : 'error'}`}>
     {Message}
   </div>
 }
