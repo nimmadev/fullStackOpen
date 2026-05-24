@@ -1,15 +1,16 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const CreateBlogForm = ({ handleCreate, createRef }) => {
+const CreateBlogForm = ({ handleCreate }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-
+  const navigation = useNavigate()
   const createBlog = async (event) => {
     event.preventDefault()
     const data = { title, author, url }
     await handleCreate(data)
-    createRef.current.toggleVisibility()
+    navigation('/')
   }
 
   return <form onSubmit={createBlog}>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { Routes, Route, useMatch, Link, useNavigate } from 'react-router-dom'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
@@ -6,17 +7,33 @@ import CreateBlogForm from './components/CreateBlogFrom'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 
+const Header = ({ user, setUser }) => {
+  const navigation = useNavigate()
+  const Logout = () => {
+    window.localStorage.removeItem('xyz')
+    setUser(null)
+    navigation('/')
+  }
+
+  return <div>
+    <Link to={'/'}>blogs</Link>{' '}
+    {user === null && <Link to={'/login'}>login</Link>}
+    {user && <Link to={'/create'}>create new</Link>}
+    {user !== null && <button onClick={Logout}>logout</button>}
+  </div>
+}
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState({ message: null, success: true })
-  const createForm = useRef()
   const setNewMesage = (message, success) => {
     setMessage({ message, success })
     setTimeout(() => setMessage({ message: null, success: true }), 3000)
 
   }
-
+  const blogId = useMatch('/blogs/:id')
+  const blog = blogId ? blogs.find(b => b.id === blogId.params.id) : null
+  console.log(blog)
   useEffect(() => {
     blogService.getAll().then(blogs => {
       blogs.sort((a, b) => b.likes - a.likes)
@@ -66,28 +83,41 @@ const App = () => {
 
     }
   }
-  if (user === null) {
-    return <div>
-      <Notification Message={message.message} Success={message.success} />
-      <LoginForm setUser={setUser} setMessage={setNewMesage} />
-    </div>
-  }
+
 
   return (
-    <div>
-
-      <h2>blogs</h2>
+    <>
+      <Header user={user} setUser={setUser} />
       <Notification Message={message.message} Success={message.success} />
-      <p>{user.name} Logged in <span onClick={Logout}>logout</span></p>
-      <Togglable buttonLabel={'create new blog'} ref={createForm} >
-        <CreateBlogForm handleCreate={handleCreate} createRef={createForm} />
-      </Togglable>
-      {
-        blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} user={user} updateLike={updateLike} />
-        )
-      }
-    </div >
+      <Routes>
+        <Route path='/login' element={
+          <>
+            <div>
+              <LoginForm setUser={setUser} setMessage={setNewMesage} />
+            </div>
+          </>}
+        />
+        <Route path='/' element={
+          <div>
+            <h2>blogs</h2>
+            <ul>
+
+              {
+                blogs.map(blog =>
+                  <Link to={`/blogs/${blog.id}`} key={blog.id}><li >{blog.title}</li></Link>
+                )
+              }
+            </ul>
+          </div >
+        } />
+        <Route path='/blogs/:id' element={
+          <Blog blog={blog} user={user} updateLike={updateLike} />
+        } />
+        <Route path='/create' element={<CreateBlogForm handleCreate={handleCreate} />} />
+      </Routes >
+
+
+    </>
   )
 }
 

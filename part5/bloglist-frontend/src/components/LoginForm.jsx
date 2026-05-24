@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import loginService from '../services/login'
 import blogsService from '../services/blogs'
+import { useNavigate } from 'react-router-dom'
 const LoginForm = ({ setUser, setMessage }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-
+  const navigate = useNavigate()
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -12,6 +13,7 @@ const LoginForm = ({ setUser, setMessage }) => {
       setUser(data)
       window.localStorage.setItem('xyz', JSON.stringify(data))
       blogsService.setToken(data.token)
+      navigate('/')
     }
     catch (e) {
       setMessage(e.response.data.error, false)

@@ -1,8 +1,14 @@
-import { render, screen } from '@testing-library/react'
+import { render as ren, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
+import { beforeEach, describe, expect } from 'vitest'
 import Blog from './Blog'
-import { expect } from 'vitest'
+import { MemoryRouter } from 'react-router-dom'
 
+const render = (child) => ren(
+  <MemoryRouter>
+    {child}
+  </MemoryRouter>
+)
 describe(('Blog render'), () => {
 
   const blog = {
@@ -18,37 +24,43 @@ describe(('Blog render'), () => {
     'id': '69f63c0ea9cd5f14f5d136ea'
   }
 
-  test('title and author by default', () => {
-    render(< Blog blog={blog} />)
-    screen.getByText('test 1 nimma')
+  describe('logged in user', () => {
+
+    test('blog information and the number of likes are displayed', () => {
+      const updateLike = vi.fn()
+      render(<Blog blog={blog} user={blog.user} updateLike={updateLike} />)
+      screen.getByText(blog.title)
+      screen.getByText(blog.url)
+      screen.getByText('likes 2')
+      screen.getByText(`added by ${blog.author}`)
+    })
+    test('like and delete buttons are displayed for creator', () => {
+      const updateLike = vi.fn()
+      render(<Blog blog={blog} user={blog.user} updateLike={updateLike} />)
+      screen.getByRole('button', { name: 'like' })
+      screen.getByRole('button', { name: 'delete' })
+    })
+    test('only like button is displayed for non creator', () => {
+      const updateLike = vi.fn()
+      render(<Blog blog={blog} user={{ ...blog.user, username: 'fake' }} updateLike={updateLike} />)
+      expect(screen.queryByRole('button', { name: 'delete' })).toBeNull()
+    })
+  })
+  describe('logged out user', () => {
+    beforeEach(() => {
+      const updateLike = vi.fn()
+      render(<Blog blog={blog} updateLike={updateLike} />)
+    })
+    test('blog information and the number of likes are displayed', () => {
+
+      screen.getByText(blog.title)
+      screen.getByText(blog.url)
+      screen.getByText('likes 2')
+      screen.getByText(`added by ${blog.author}`)
+    })
+    test('like button not displayed', () => {
+      expect(screen.queryByRole('button', { name: 'like' })).toBeNull()
+    })
   })
 
-  test('does not render title and author by default', () => {
-    render(<Blog blog={blog} />)
-    const result = screen.queryByText('test')
-    expect(result).toBeNull()
-  })
-
-  test('url and like is show after show button click', async () => {
-    render(<Blog blog={blog} user={blog.user} />)
-    const button = screen.getByText('show')
-    const user = userEvent.setup()
-    await user.click(button)
-    screen.getByText('test')
-    screen.getByText('2')
-  })
-
-  test('like button click twice received', async () => {
-    const fn = vi.fn()
-    render(<Blog blog={blog} user={blog.user} updateLike={fn} />)
-    const button = screen.getByText('show')
-    const user = userEvent.setup()
-    await user.click(button)
-
-    const likeButton = screen.getByText('like')
-    await user.click(likeButton)
-    await user.click(likeButton)
-
-    expect(fn.mock.calls).toHaveLength(2)
-  })
 })

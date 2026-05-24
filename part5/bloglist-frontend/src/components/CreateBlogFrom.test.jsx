@@ -1,14 +1,18 @@
-import { render, screen } from '@testing-library/react'
+import { render as ren, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import CreateBlogForm from './CreateBlogFrom'
+import { MemoryRouter } from 'react-router-dom'
+
+const render = (child) => ren(
+  <MemoryRouter>
+    {child}
+  </MemoryRouter>
+)
 
 test('form function get correct params', async () => {
   const create = vi.fn()
-  const hide = {
-    current: { toggleVisibility: vi.fn() }
-  }
 
-  render(<CreateBlogForm createRef={hide} handleCreate={create} />)
+  render(<CreateBlogForm handleCreate={create} />)
   const title = screen.getByLabelText('title:')
   const author = screen.getByLabelText('author:')
   const url = screen.getByLabelText('url:')
