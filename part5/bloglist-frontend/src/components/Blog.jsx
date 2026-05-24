@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
+import { useNavigate } from 'react-router-dom'
 
 const Blog = ({ blog, user, updateLike }) => {
   const [likes, setlikes] = useState(blog?.likes || null)
+  const navigate = useNavigate()
   if (!blog) { return null }
   // console.log(user)
-
 
   const deleteBlog = async () => {
     try {
@@ -13,6 +14,7 @@ const Blog = ({ blog, user, updateLike }) => {
       if (confirm) {
 
         await blogService.deleteBlog(blog.id)
+        navigate('/')
         navigation.reload()
       }
     }
