@@ -7,22 +7,8 @@ import LoginForm from './components/LoginForm'
 import CreateBlogForm from './components/CreateBlogFrom'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import Nav from './components/Nav'
 
-const Header = ({ user, setUser }) => {
-  const navigation = useNavigate()
-  const Logout = () => {
-    window.localStorage.removeItem('xyz')
-    setUser(null)
-    navigation('/')
-  }
-
-  return <div>
-    <Link to={'/'}>blogs</Link>{' '}
-    {user === null && <Link to={'/login'}>login</Link>}
-    {user && <Link to={'/create'}>create new</Link>}
-    {user !== null && <button onClick={Logout}>logout</button>}
-  </div>
-}
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
@@ -88,7 +74,7 @@ const App = () => {
 
   return (
     <Container>
-      <Header user={user} setUser={setUser} />
+      <Nav user={user} setUser={setUser} />
       <Notification Message={message.message} Success={message.success} />
       <Routes>
         <Route path='/login' element={

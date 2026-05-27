@@ -2,6 +2,7 @@ import { useState } from 'react'
 import loginService from '../services/login'
 import blogsService from '../services/blogs'
 import { useNavigate } from 'react-router-dom'
+import { Typography, InputLabel, Input, Button } from '@mui/material'
 const LoginForm = ({ setUser, setMessage }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -20,18 +21,18 @@ const LoginForm = ({ setUser, setMessage }) => {
     }
   }
   return < form onSubmit={handleLogin}>
-    <h1>log in to application</h1>
+    <Typography variant='h4'>log in to application</Typography>
     <div>
-      <label >
-        username <input type="text" value={username} onChange={event => setUsername(event.target.value)} />
-      </label>
+      <InputLabel >
+        username <Input type="text" value={username} onChange={event => setUsername(event.target.value)} />
+      </InputLabel>
     </div>
     <div>
-      <label >
-        password <input type="text" value={password} onChange={({ target }) => setPassword(target.value)} />
-      </label>
+      <InputLabel >
+        password <Input type="text" value={password} onChange={({ target }) => setPassword(target.value)} />
+      </InputLabel>
     </div>
-    <button type="submit">Login</button>
+    <Button variant='contained' style={{ marginTop: '10px' }} type="submit">Login</Button>
   </form >
 }
 

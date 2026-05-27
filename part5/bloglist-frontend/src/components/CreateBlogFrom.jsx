@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Typography, InputLabel, Input, Button } from '@mui/material'
 
 const CreateBlogForm = ({ handleCreate }) => {
   const [title, setTitle] = useState('')
@@ -14,17 +15,17 @@ const CreateBlogForm = ({ handleCreate }) => {
   }
 
   return <form onSubmit={createBlog}>
-    <h1>create new</h1>
+    <Typography variant='h3'>create new</Typography>
     <div>
-      <label >title: <input type="text" value={title} onChange={({ target }) => setTitle(target.value)} /></label>
+      <InputLabel >title: <Input type="text" value={title} onChange={({ target }) => setTitle(target.value)} /></InputLabel>
     </div>
     <div>
-      <label >author: <input type="text" value={author} onChange={({ target }) => setAuthor(target.value)} /></label>
+      <InputLabel >author: <Input type="text" value={author} onChange={({ target }) => setAuthor(target.value)} /></InputLabel>
     </div>
     <div>
-      <label >url: <input type="text" value={url} onChange={({ target }) => setUrl(target.value)} /></label>
+      <InputLabel >url: <Input type="text" value={url} onChange={({ target }) => setUrl(target.value)} /></InputLabel>
     </div>
-    <button type="submit">create</button>
+    <Button variant='contained' style={{ marginTop: '10px' }} type="submit">create</Button>
   </form>
 }
 

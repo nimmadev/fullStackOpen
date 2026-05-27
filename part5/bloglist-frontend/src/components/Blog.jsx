@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 import { useNavigate } from 'react-router-dom'
+import { Box, Link, Paper, Typography, Button } from '@mui/material'
 
 const Blog = ({ blog, user, updateLike }) => {
   const [likes, setlikes] = useState(blog?.likes || null)
@@ -28,14 +29,14 @@ const Blog = ({ blog, user, updateLike }) => {
     const isUser = blog.user.username === user?.username
     // console.log(isUser)
     return <>
-      <p style={{ margin: 0 }}>{blog.url}</p>
-      <div>likes {likes || blog.likes} {user && <button onClick={async () => {
+      <Link href={blog.url} style={{ margin: 0 }}>{blog.url}</Link>
+      <Box sx={{ color: 'grey' }}>likes {likes || blog.likes} {user && <Button variant='contained' onClick={async () => {
         const result = await updateLike(blog)
         if (result) setlikes(result.likes)
-      }}>like</button>}</div>
+      }}>like</Button>}</Box>
       <p>added by {blog.author}</p>
       <p style={{ margin: 0 }}>{blog.user.name}</p>
-      {isUser && <button onClick={deleteBlog} style={{ background: 'red' }}>delete</button>}
+      {isUser && <Button variant='contained' color='error' onClick={deleteBlog} style={{ background: 'red' }}>delete</Button>}
     </>
   }
   const blogStyle = {
@@ -45,12 +46,12 @@ const Blog = ({ blog, user, updateLike }) => {
     borderWidth: 1,
     marginBottom: 5,
   }
-  return <div style={blogStyle}>
-    <p>
+  return <Paper style={blogStyle}>
+    <Typography variant='h3'>
       {blog.title}
-    </p>
+    </Typography>
     <BlogDetail />
-  </div>
+  </Paper>
 }
 
 export default Blog
