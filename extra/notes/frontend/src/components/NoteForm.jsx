@@ -1,30 +1,35 @@
-import noteService from '../services/notes'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const NoteForm = ({ user, newNote, notes, setNotes, setNewNote }) => {
+const NoteForm = ({ createNote }) => {
+  const [newNote, setNewNote] = useState('')
+  const navigate = useNavigate()
+
   const addNote = event => {
     event.preventDefault()
-    const noteObject = {
+    createNote({
       content: newNote,
-      important: Math.random() > 0.5
-    }
-
-    noteService.create(noteObject).then(returnedNote => {
-      setNotes(notes.concat(returnedNote))
-      setNewNote('')
+      important: true
     })
+
+    navigate('/notes')
+    setNewNote('')
   }
 
-  const handleNoteChange = event => {
-    setNewNote(event.target.value)
-  }
+  return (
+    <div>
+      <h2>Create a new note</h2>
 
-  return <div>
-    <p>{user.name} logged in</p>
-    <form onSubmit={addNote}>
-      <input value={newNote} onChange={handleNoteChange} />
-      <button type="submit">save</button>
-    </form>
-  </div >
+      <form onSubmit={addNote}>
+        <input
+          value={newNote}
+          onChange={event => setNewNote(event.target.value)}
+          placeholder="write note content here"
+        />
+        <button type="submit">save</button>
+      </form>
+    </div>
+  )
 }
 
 export default NoteForm

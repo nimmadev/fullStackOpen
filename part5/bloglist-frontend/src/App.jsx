@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
+import { Container } from '@mui/material'
 import { Routes, Route, useMatch, Link, useNavigate } from 'react-router-dom'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
@@ -86,7 +87,7 @@ const App = () => {
 
 
   return (
-    <>
+    <Container>
       <Header user={user} setUser={setUser} />
       <Notification Message={message.message} Success={message.success} />
       <Routes>
@@ -117,7 +118,7 @@ const App = () => {
       </Routes >
 
 
-    </>
+    </Container>
   )
 }
 
