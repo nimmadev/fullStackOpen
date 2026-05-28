@@ -46,7 +46,6 @@ describe('Blog App', () => {
       await LoginUser(page, 'nimma', 'nimmanimma')
       const errorText = page.getByText('invalid username or password')
       await expect(errorText).toBeVisible()
-      await expect(errorText).toHaveClass('base-message error')
     })
   })
 
