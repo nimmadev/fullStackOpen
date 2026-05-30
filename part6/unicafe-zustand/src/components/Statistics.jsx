@@ -8,7 +8,6 @@ const Statistics = () => {
   const average = all === 0 ? 0 : (good - bad) / all
   const positive = all === 0 ? 0 : (good / all) * 100
 
-
   return (
     <div>
       <h2>statistics</h2>
