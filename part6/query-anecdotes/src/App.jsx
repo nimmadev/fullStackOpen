@@ -2,6 +2,7 @@
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import { useAnecdote } from './components/useAnecdotes'
+import { NotificationProvider } from './NotifiactionContext'
 
 const App = () => {
   const { data, isPending, isError, updateVote } = useAnecdote()
@@ -21,22 +22,25 @@ const App = () => {
   const anecdotes = data
 
   return (
-    <div>
-      <h3>Anecdote app</h3>
+    <NotificationProvider>
 
-      <Notification />
-      <AnecdoteForm />
+      <div>
+        <h3>Anecdote app</h3>
 
-      {anecdotes.map((anecdote) => (
-        <div key={anecdote.id}>
-          <div>{anecdote.content}</div>
-          <div>
-            has {anecdote.votes}
-            <button onClick={() => handleVote(anecdote)}>vote</button>
+        <Notification />
+        <AnecdoteForm />
+
+        {anecdotes.map((anecdote) => (
+          <div key={anecdote.id}>
+            <div>{anecdote.content}</div>
+            <div>
+              has {anecdote.votes}
+              <button onClick={() => handleVote(anecdote)}>vote</button>
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </NotificationProvider>
   )
 }
 

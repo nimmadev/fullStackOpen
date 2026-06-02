@@ -1,11 +1,22 @@
+import { useNotify } from "../NotifiactionContext"
 import { useAnecdote } from "./useAnecdotes"
 
 const AnecdoteForm = () => {
   const { createAnecdote } = useAnecdote()
+  const { updateMessage } = useNotify()
+
   const onCreate = (event) => {
     event.preventDefault()
     const content = event.target.anecdote.value
-    createAnecdote.mutate({ content, votes: 0 })
+    createAnecdote.mutate(
+      { content, votes: 0 },
+      {
+        onSuccess: () => { updateMessage(`added ${content}`) },
+        onError: () => {
+          updateMessage('too short anecdote, at least 5 chars or more')
+        }
+      }
+    )
     event.target.reset()
     console.log('new anecdote')
   }
