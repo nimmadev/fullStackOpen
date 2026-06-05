@@ -1,0 +1,13 @@
+{
+  "name": "routed-anecdotes",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "server": "json-server --port 3001 db.json"
+  }
+}
