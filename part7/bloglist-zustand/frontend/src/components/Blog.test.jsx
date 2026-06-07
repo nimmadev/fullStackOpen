@@ -1,5 +1,4 @@
 import { render as ren, screen } from "@testing-library/react"
-import { userEvent } from "@testing-library/user-event"
 import { beforeEach, describe, expect } from "vitest"
 import Blog from "./Blog"
 import { MemoryRouter } from "react-router-dom"

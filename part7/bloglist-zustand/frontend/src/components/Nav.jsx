@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "react-router-dom"
 import { AppBar, Toolbar, Button, Typography } from "@mui/material"
-const Nav = ({ user, setUser }) => {
+import { useUser } from "../store"
+const Nav = () => {
   const navigation = useNavigate()
+  const { user, clear } = useUser()
   const Logout = () => {
-    window.localStorage.removeItem("xyz")
-    setUser(null)
+    clear()
     navigation("/")
   }
 

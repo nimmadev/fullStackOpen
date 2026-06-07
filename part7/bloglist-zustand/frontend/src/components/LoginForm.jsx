@@ -1,22 +1,25 @@
 import { useState } from "react"
 import loginService from "../services/login"
-import blogsService from "../services/blogs"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Navigate } from "react-router-dom"
 import { Typography, InputLabel, Input, Button } from "@mui/material"
-const LoginForm = ({ setUser, setMessage }) => {
+import { useNotication, useUser } from "../store"
+const LoginForm = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const { user, setUser } = useUser()
+  const { setMessage } = useNotication()
   const navigate = useNavigate()
+  if (user !== null) {
+    return <Navigate to="/" replace />
+  }
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
       const data = await loginService.login({ username, password })
       setUser(data)
-      window.localStorage.setItem("xyz", JSON.stringify(data))
-      blogsService.setToken(data.token)
       navigate("/")
     } catch (e) {
-      setMessage(e.response.data.error, false)
+      setMessage({ Message: e.response.data.error, Success: false })
     }
   }
   return (

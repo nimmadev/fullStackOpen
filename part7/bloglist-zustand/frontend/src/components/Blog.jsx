@@ -1,23 +1,23 @@
-import { useState } from "react"
-import blogService from "../services/blogs"
 import { useNavigate } from "react-router-dom"
 import { Box, Link, Paper, Typography, Button } from "@mui/material"
+import { useBlogActions, useUser } from "../store"
 
-const Blog = ({ blog, user, updateLike }) => {
-  const [likes, setlikes] = useState(blog?.likes || null)
+const Blog = ({ blog }) => {
+  const { user } = useUser()
+  const { deleteBlog, likeBlog } = useBlogActions()
   const navigate = useNavigate()
   if (!blog) {
     return null
   }
-  // console.log(user)
+  console.log(blog)
 
-  const deleteBlog = async () => {
+  const handleDelete = async () => {
     try {
       const confirm = window.confirm(
         `remove blog ${blog.title} by ${blog.author}`,
       )
       if (confirm) {
-        await blogService.deleteBlog(blog.id)
+        await deleteBlog(blog.id)
         navigate("/")
         navigation.reload()
       }
@@ -25,6 +25,7 @@ const Blog = ({ blog, user, updateLike }) => {
       console.log(e, "error")
     }
   }
+
   const BlogDetail = () => {
     // console.log(blog.user.username, user?.username)
     const isUser = blog.user.username === user?.username
@@ -35,13 +36,13 @@ const Blog = ({ blog, user, updateLike }) => {
           {blog.url}
         </Link>
         <Box sx={{ color: "grey" }}>
-          likes {likes || blog.likes}{" "}
+          likes {blog.likes}{" "}
           {user && (
             <Button
               variant="contained"
               onClick={async () => {
-                const result = await updateLike(blog)
-                if (result) setlikes(result.likes)
+                await likeBlog(blog)
+                // if (result) setlikes(result.likes)
               }}
             >
               like
@@ -54,7 +55,7 @@ const Blog = ({ blog, user, updateLike }) => {
           <Button
             variant="contained"
             color="error"
-            onClick={deleteBlog}
+            onClick={handleDelete}
             style={{ background: "red" }}
           >
             delete
