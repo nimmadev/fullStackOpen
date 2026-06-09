@@ -3,9 +3,12 @@ import loginService from "../services/login"
 import blogsService from "../services/blogs"
 import { useNavigate } from "react-router-dom"
 import { Typography, InputLabel, Input, Button } from "@mui/material"
-const LoginForm = ({ setUser, setMessage }) => {
+import { useNotify } from "../hooks/notificationHook"
+const LoginForm = ({ setUser }) => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const { updateNotification } = useNotify()
+
   const navigate = useNavigate()
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -16,7 +19,7 @@ const LoginForm = ({ setUser, setMessage }) => {
       blogsService.setToken(data.token)
       navigate("/")
     } catch (e) {
-      setMessage(e.response.data.error, false)
+      updateNotification({ message: e.response.data.error, success: false })
     }
   }
   return (

@@ -9,16 +9,13 @@ import Notification from "./components/Notification"
 import Togglable from "./components/Togglable"
 import Nav from "./components/Nav"
 import ErrorBoundary from "./components/ErrorBoundary"
-import { NotificationProvider } from "./hooks/notificationHook"
+import { NotificationProvider, useNotify } from "./hooks/notificationHook"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [message, setMessage] = useState({ message: null, success: true })
-  const setNewMesage = (message, success) => {
-    setMessage({ message, success })
-    setTimeout(() => setMessage({ message: null, success: true }), 3000)
-  }
+  const { updateNotification } = useNotify()
+
   const blogId = useMatch("/blogs/:id")
   const blog = blogId ? blogs.find((b) => b.id === blogId.params.id) : null
   console.log(blog)
@@ -60,12 +57,16 @@ const App = () => {
     try {
       const blog = await blogService.createBlog(data)
       const message = `a new blog ${data.title} by ${data.author} added`
-      setNewMesage(message, true)
+      updateNotification({
+        message,
+        success: true,
+      })
+
       setBlogs((blogs) => blogs.concat(blog))
     } catch (e) {
       console.log(e)
       if (e.response.data.error === "token expired") {
-        setNewMesage(e.response.data.error, false)
+        updateNotification({ message: e.response.data.error, success: false })
         window.localStorage.clear("xyz")
         navigation.reload()
       }
@@ -74,7 +75,6 @@ const App = () => {
   }
 
   return (
-    <NotificationProvider>
     <Container>
       <Nav user={user} setUser={setUser} />
       <Notification />
@@ -85,11 +85,11 @@ const App = () => {
             element={
               <>
                 <div>
-                  <LoginForm setUser={setUser} setMessage={setNewMesage} />
+                  <LoginForm setUser={setUser} />
                 </div>
               </>
             }
-            />
+          />
           <Route
             path="/"
             element={
@@ -104,20 +104,19 @@ const App = () => {
                 </ul>
               </div>
             }
-            />
+          />
           <Route
             path="/blogs/:id"
             element={<Blog blog={blog} user={user} updateLike={updateLike} />}
-            />
+          />
           <Route
             path="/create"
             element={<CreateBlogForm handleCreate={handleCreate} />}
-            />
+          />
           <Route path="*" element={<h2>404 - Page not found</h2>} />
         </Routes>
       </ErrorBoundary>
     </Container>
-  </NotificationProvider>
   )
 }
 
