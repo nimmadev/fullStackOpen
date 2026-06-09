@@ -9,6 +9,7 @@ import Notification from "./components/Notification"
 import Togglable from "./components/Togglable"
 import Nav from "./components/Nav"
 import ErrorBoundary from "./components/ErrorBoundary"
+import { NotificationProvider } from "./hooks/notificationHook"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -73,9 +74,10 @@ const App = () => {
   }
 
   return (
+    <NotificationProvider>
     <Container>
       <Nav user={user} setUser={setUser} />
-      <Notification Message={message.message} Success={message.success} />
+      <Notification />
       <ErrorBoundary>
         <Routes>
           <Route
@@ -87,7 +89,7 @@ const App = () => {
                 </div>
               </>
             }
-          />
+            />
           <Route
             path="/"
             element={
@@ -102,19 +104,20 @@ const App = () => {
                 </ul>
               </div>
             }
-          />
+            />
           <Route
             path="/blogs/:id"
             element={<Blog blog={blog} user={user} updateLike={updateLike} />}
-          />
+            />
           <Route
             path="/create"
             element={<CreateBlogForm handleCreate={handleCreate} />}
-          />
+            />
           <Route path="*" element={<h2>404 - Page not found</h2>} />
         </Routes>
       </ErrorBoundary>
     </Container>
+  </NotificationProvider>
   )
 }
 
