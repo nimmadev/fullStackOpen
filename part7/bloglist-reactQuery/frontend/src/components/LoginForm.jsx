@@ -4,18 +4,26 @@ import blogsService from "../services/blogs"
 import { useNavigate } from "react-router-dom"
 import { Typography, InputLabel, Input, Button } from "@mui/material"
 import { useNotify } from "../hooks/notificationHook"
-const LoginForm = ({ setUser }) => {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const { updateNotification } = useNotify()
+import { useUser } from "../hooks/userHook"
+import presistentUser from "../services/persistentUser"
+import { useField } from "../hooks/useField"
 
+const LoginForm = () => {
+  const { setUser } = useUser()
+  const username = useField("text")
+  const password = useField("text")
+
+  const { updateNotification } = useNotify()
   const navigate = useNavigate()
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      const data = await loginService.login({ username, password })
+      const data = await loginService.login({
+        username: username.value,
+        password: password.value,
+      })
       setUser(data)
-      window.localStorage.setItem("xyz", JSON.stringify(data))
+      presistentUser.saveUser(data)
       blogsService.setToken(data.token)
       navigate("/")
     } catch (e) {
@@ -27,22 +35,12 @@ const LoginForm = ({ setUser }) => {
       <Typography variant="h4">log in to application</Typography>
       <div>
         <InputLabel>
-          username{" "}
-          <Input
-            type="text"
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
-          />
+          username <Input {...username} />
         </InputLabel>
       </div>
       <div>
         <InputLabel>
-          password{" "}
-          <Input
-            type="text"
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-          />
+          password <Input {...password} />
         </InputLabel>
       </div>
       <Button variant="contained" style={{ marginTop: "10px" }} type="submit">

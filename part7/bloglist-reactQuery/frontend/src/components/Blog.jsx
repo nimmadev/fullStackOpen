@@ -1,15 +1,25 @@
-import { useState } from "react"
-import blogService from "../services/blogs"
 import { useNavigate } from "react-router-dom"
 import { Box, Link, Paper, Typography, Button } from "@mui/material"
+import { useBlog } from "./useBlog"
+import { useUser } from "../hooks/userHook"
 
-const Blog = ({ blog, user, updateLike }) => {
-  const [likes, setlikes] = useState(blog?.likes || null)
+const Blog = ({ blog }) => {
+  const { user } = useUser()
+  const { deleteB, like: likeBlog } = useBlog()
   const navigate = useNavigate()
   if (!blog) {
     return null
   }
   // console.log(user)
+
+  const updateLike = (blog) => {
+    const data = {
+      ...blog,
+      user: blog.user.id,
+      likes: blog.likes + 1,
+    }
+    likeBlog.mutate(data)
+  }
 
   const deleteBlog = async () => {
     try {
@@ -17,16 +27,13 @@ const Blog = ({ blog, user, updateLike }) => {
         `remove blog ${blog.title} by ${blog.author}`,
       )
       if (confirm) {
-        await blogService.deleteBlog(blog.id)
-        navigate("/")
-        navigation.reload()
+        deleteB.mutate(blog.id, { onSuccess: () => navigate("/") })
       }
     } catch (e) {
       console.log(e, "error")
     }
   }
   const BlogDetail = () => {
-    // console.log(blog.user.username, user?.username)
     const isUser = blog.user.username === user?.username
     // console.log(isUser)
     return (
@@ -35,15 +42,9 @@ const Blog = ({ blog, user, updateLike }) => {
           {blog.url}
         </Link>
         <Box sx={{ color: "grey" }}>
-          likes {likes || blog.likes}{" "}
+          likes {blog.likes}{" "}
           {user && (
-            <Button
-              variant="contained"
-              onClick={async () => {
-                const result = await updateLike(blog)
-                if (result) setlikes(result.likes)
-              }}
-            >
+            <Button variant="contained" onClick={() => updateLike(blog)}>
               like
             </Button>
           )}

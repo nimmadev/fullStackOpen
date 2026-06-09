@@ -1,50 +1,65 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Typography, InputLabel, Input, Button } from "@mui/material"
+import { useBlog } from "./useBlog"
+import { useNotify } from "../hooks/notificationHook"
+import { useField } from "../hooks/useField"
 
-const CreateBlogForm = ({ handleCreate }) => {
-  const [title, setTitle] = useState("")
-  const [author, setAuthor] = useState("")
-  const [url, setUrl] = useState("")
+const CreateBlogForm = () => {
+  const title = useField("text")
+  const author = useField("text")
+  const url = useField("text")
+
+  const { create } = useBlog()
   const navigation = useNavigate()
-  const createBlog = async (event) => {
+  const { updateNotification } = useNotify()
+  const handleCreate = async (event) => {
     event.preventDefault()
-    const data = { title, author, url }
-    await handleCreate(data)
-    navigation("/")
+    const data = { title: title.value, author: author.value, url: url.value }
+
+    try {
+      const message = `a new blog ${data.title} by ${data.author} added`
+      create.mutate(data, {
+        onSuccess: () => {
+          updateNotification({
+            message,
+            success: true,
+          })
+          navigation("/")
+        },
+        onError: (e) =>
+          updateNotification({
+            message: e.response.data.error,
+            success: false,
+          }),
+      })
+    } catch (e) {
+      console.log(e)
+      if (e.response.data.error === "token expired") {
+        updateNotification({ message: e.response.data.error, success: false })
+        window.localStorage.clear("xyz")
+        navigation.reload()
+      }
+      console.log(e)
+    }
   }
 
   return (
-    <form onSubmit={createBlog}>
+    <form onSubmit={handleCreate}>
       <Typography variant="h3">create new</Typography>
       <div>
         <InputLabel>
-          title:{" "}
-          <Input
-            type="text"
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-          />
+          title: <Input {...title} />
         </InputLabel>
       </div>
       <div>
         <InputLabel>
-          author:{" "}
-          <Input
-            type="text"
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-          />
+          author: <Input {...author} />
         </InputLabel>
       </div>
       <div>
         <InputLabel>
-          url:{" "}
-          <Input
-            type="text"
-            value={url}
-            onChange={({ target }) => setUrl(target.value)}
-          />
+          url: <Input {...url} />
         </InputLabel>
       </div>
       <Button variant="contained" style={{ marginTop: "10px" }} type="submit">

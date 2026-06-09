@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "react-router-dom"
 import { AppBar, Toolbar, Button, Typography } from "@mui/material"
-const Nav = ({ user, setUser }) => {
+import { useUser } from "../hooks/userHook"
+const Nav = () => {
+  const { user, Logout } = useUser()
   const navigation = useNavigate()
-  const Logout = () => {
-    window.localStorage.removeItem("xyz")
-    setUser(null)
+  const logout = () => {
+    Logout()
     navigation("/")
   }
 
@@ -29,7 +30,7 @@ const Nav = ({ user, setUser }) => {
         )}
 
         {user !== null && (
-          <Button color="inherit" onClick={Logout}>
+          <Button color="inherit" onClick={logout}>
             logout
           </Button>
         )}
