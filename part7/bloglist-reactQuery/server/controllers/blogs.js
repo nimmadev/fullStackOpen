@@ -1,15 +1,15 @@
-const BlogRouter = require('express').Router()
-const Blog = require('../models/blog')
+const BlogRouter = require("express").Router();
+const Blog = require("../models/blog");
 
+BlogRouter.get("/", async (request, response) => {
+  const blogs = await Blog.find({})
+    .populate("user", { username: 1, name: 1 })
+    .populate("comments", { comment: 1 });
+  response.json(blogs);
+});
 
-
-BlogRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
-  response.json(blogs)
-})
-
-BlogRouter.post('/', async (request, response) => {
-  const blog = new Blog(request.body)
+BlogRouter.post("/", async (request, response) => {
+  const blog = new Blog(request.body);
   // const token = jwt.verify(request.token, SECRET)
   // if (!token.id) {
   //   return response.status(401).json({ error: 'token invalid' })
@@ -18,16 +18,19 @@ BlogRouter.post('/', async (request, response) => {
   // if (!user) {
   //   return response.status(400).json({ error: 'userId missing or not valid' })
   // }
-  const user = request.user
-  blog.user = user._id
-  const result = await blog.save()
-  user.blogs = user.blogs.concat(result._id)
-  await user.save()
-  const r = result.toJSON()
-  response.status(201).json({ ...r, user: { id: user.id, username: user.username, name: user.name } })
-})
+  const user = request.user;
+  blog.user = user._id;
+  const result = await blog.save();
+  user.blogs = user.blogs.concat(result._id);
+  await user.save();
+  const r = result.toJSON();
+  response.status(201).json({
+    ...r,
+    user: { id: user.id, username: user.username, name: user.name },
+  });
+});
 
-BlogRouter.delete('/:id', async (request, response) => {
+BlogRouter.delete("/:id", async (request, response) => {
   // const decodedToken = jwt.verify(request.token, SECRET)
   // if (!decodedToken.id) {
   //   return response.status(401).json({ error: 'token invalid' })
@@ -36,35 +39,39 @@ BlogRouter.delete('/:id', async (request, response) => {
   // if (!user) {
   //   return response.status(400).json({ error: 'userId missing or not valid' })
   // }
-  const user = request.user
-  const id = request.params.id
+  const user = request.user;
+  const id = request.params.id;
   if (!user.blogs.includes(id)) {
-    return response.status(401).json({ error: 'invalid request' })
+    return response.status(401).json({ error: "invalid request" });
   }
-  await Blog.findByIdAndDelete(id)
-  user.blogs = user.blogs.filter(blogId => blogId !== id)
-  await user.save()
-  response.status(204).end()
-})
+  await Blog.findByIdAndDelete(id);
+  user.blogs = user.blogs.filter((blogId) => blogId !== id);
+  await user.save();
+  response.status(204).end();
+});
 
-BlogRouter.put('/:id', async (request, response) => {
-  // const user = request.user
-  const id = request.params.id
+BlogRouter.put("/:id", async (request, response) => {
+  const useri = request.user;
+  const id = request.params.id;
 
   // if (!user.blogs.includes(id)) {
   //   return response.status(401).json({ error: 'invalid request' })
   // }
-  const { title, author, url, likes, user } = request.body
+  const { title, author, url, likes, user } = request.body;
 
-  const blog = await Blog.findById(id)
-  blog.title = title
-  blog.author = author
-  blog.url = url
-  blog.likes = likes
-  blog.user = user
+  const blog = await Blog.findById(id);
+  blog.title = title;
+  blog.author = author;
+  blog.url = url;
+  blog.likes = likes;
+  blog.user = user;
 
-  const savedBlog = await blog.save()
-  response.status(201).json(savedBlog)
-})
+  const savedBlog = await blog.save();
+  const r = savedBlog.toJSON();
+  response.status(201).json({
+    ...r,
+    user: { id: useri.id, username: useri.username, name: useri.name },
+  });
+});
 
-module.exports = BlogRouter
+module.exports = BlogRouter;

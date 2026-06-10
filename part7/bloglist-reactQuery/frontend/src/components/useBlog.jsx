@@ -34,6 +34,10 @@ export const useBlog = () => {
       )
     },
   })
+  const comment = useMutation({
+    mutationFn: blogService.comment,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["blogs"] }),
+  })
 
   return {
     data: result.data,
@@ -42,5 +46,6 @@ export const useBlog = () => {
     create,
     deleteB,
     like,
+    comment,
   }
 }

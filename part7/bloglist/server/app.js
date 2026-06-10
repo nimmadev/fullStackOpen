@@ -4,6 +4,8 @@ const config = require("./utils/config");
 const logger = require("./utils/logger");
 const BlogRouter = require("./controllers/blogs");
 const userRouter = require("./controllers/users");
+const commentRouter = require("./controllers/comment");
+
 const {
   unknownEndpoint,
   errorHandler,
@@ -26,6 +28,7 @@ app.use(tokenExtractor);
 app.use(userExtractor);
 
 app.use("/api/blogs", BlogRouter);
+app.use("/api/blogs/:id/comment", commentRouter);
 app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
 

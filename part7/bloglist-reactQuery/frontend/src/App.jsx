@@ -10,11 +10,12 @@ import ErrorBoundary from "./components/ErrorBoundary"
 import { NotificationProvider } from "./hooks/notificationHook"
 import { useBlog } from "./components/useBlog"
 import { UserProvider } from "./hooks/userHook"
+import { Users } from "./components/Users"
+import { UsersProvider } from "./hooks/usersHook"
+import { User } from "./components/User"
 
 const App = () => {
   const { data, isPending, isError } = useBlog()
-  const blogId = useMatch("/blogs/:id")
-
   if (isPending) {
     return <div>Loading ....</div>
   }
@@ -22,48 +23,50 @@ const App = () => {
     return <div>blogs service not avilable</div>
   }
   const blogs = data
-  const blog = blogId ? blogs.find((b) => b.id === blogId.params.id) : null
-  console.log(blog)
 
   return (
-    <UserProvider>
-      <Container>
-        <Nav />
-        <Notification />
-        <ErrorBoundary>
-          <Routes>
-            <Route
-              path="/login"
-              element={
-                <>
+    <UsersProvider>
+      <UserProvider>
+        <Container>
+          <Nav />
+          <Notification />
+          <ErrorBoundary>
+            <Routes>
+              <Route
+                path="/login"
+                element={
+                  <>
+                    <div>
+                      <LoginForm />
+                    </div>
+                  </>
+                }
+              />
+              <Route
+                path="/"
+                element={
                   <div>
-                    <LoginForm />
+                    <h2>blogs</h2>
+                    <ul>
+                      {blogs.map((blog) => (
+                        <Link to={`/blogs/${blog.id}`} key={blog.id}>
+                          <li>{blog.title}</li>
+                        </Link>
+                      ))}
+                    </ul>
                   </div>
-                </>
-              }
-            />
-            <Route
-              path="/"
-              element={
-                <div>
-                  <h2>blogs</h2>
-                  <ul>
-                    {blogs.map((blog) => (
-                      <Link to={`/blogs/${blog.id}`} key={blog.id}>
-                        <li>{blog.title}</li>
-                      </Link>
-                    ))}
-                  </ul>
-                </div>
-              }
-            />
-            <Route path="/blogs/:id" element={<Blog blog={blog} />} />
-            <Route path="/create" element={<CreateBlogForm />} />
-            <Route path="*" element={<h2>404 - Page not found</h2>} />
-          </Routes>
-        </ErrorBoundary>
-      </Container>
-    </UserProvider>
+                }
+              />
+              <Route path="/blogs/:id" element={<Blog />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/users/:id" element={<User />} />
+              <Route path="/create" element={<CreateBlogForm />} />
+              <Route path="*" element={<h2>404 - Page not found</h2>} />
+            </Routes>
+          </ErrorBoundary>
+        </Container>
+      </UserProvider>
+    </UsersProvider>
   )
 }
 

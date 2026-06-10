@@ -1,11 +1,12 @@
-import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Typography, InputLabel, Input, Button } from "@mui/material"
 import { useBlog } from "./useBlog"
 import { useNotify } from "../hooks/notificationHook"
 import { useField } from "../hooks/useField"
+import { useUser } from "../hooks/userHook"
 
 const CreateBlogForm = () => {
+  const { Logout } = useUser()
   const title = useField("text")
   const author = useField("text")
   const url = useField("text")
@@ -27,18 +28,23 @@ const CreateBlogForm = () => {
           })
           navigation("/")
         },
-        onError: (e) =>
+        onError: (e) => {
+          if (e?.response?.data?.error === "token expired") {
+            Logout()
+            navigation("/login")
+          }
           updateNotification({
             message: e.response.data.error,
             success: false,
-          }),
+          })
+        },
       })
     } catch (e) {
       console.log(e)
       if (e.response.data.error === "token expired") {
         updateNotification({ message: e.response.data.error, success: false })
-        window.localStorage.clear("xyz")
-        navigation.reload()
+        Logout()
+        navigation("/login")
       }
       console.log(e)
     }

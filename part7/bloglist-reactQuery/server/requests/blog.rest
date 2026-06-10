@@ -4,7 +4,7 @@ GET http://localhost:3001/api/blogs
 ### create a blog
 POST  http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb290IiwiaWQiOiI2OWY2MmY5NTcyOGUwZmI3OTc2MGE3NjYiLCJpYXQiOjE3Nzc3NDYyNjgsImV4cCI6MTc3Nzc0OTg2OH0.EwInS2H3xATeXPhqjbzbfS7c4d-pSoRMWCi-I1-X8oU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5pbW1hIiwiaWQiOiI2YTI0ZjM5YzQyMDM5ZmI3NDc3YmFhYzAiLCJpYXQiOjE3ODA4MDY1NjEsImV4cCI6MTc4MDgxMDE2MX0.mn8sf7Ces0dBv1aHGKpcS3vrwzYkPGjwHKhMRCRvxwE
 
 {
   "title": "test 2",
@@ -14,6 +14,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb
 }
 
 ### delete a blog
-DELETE  http://localhost:3001/api/blogs/69f64935d4a8bfb15827fd3d
+DELETE  http://localhost:3001/api/blogs/6a24f3b642039fb7477baac3
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb290IiwiaWQiOiI2OWY2MmY5NTcyOGUwZmI3OTc2MGE3NjYiLCJpYXQiOjE3Nzc3NDYyNjgsImV4cCI6MTc3Nzc0OTg2OH0.EwInS2H3xATeXPhqjbzbfS7c4d-pSoRMWCi-I1-X8oU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5pbW1hIiwiaWQiOiI2YTI0ZjM5YzQyMDM5ZmI3NDc3YmFhYzAiLCJpYXQiOjE3ODA4MDY1NjEsImV4cCI6MTc4MDgxMDE2MX0.mn8sf7Ces0dBv1aHGKpcS3vrwzYkPGjwHKhMRCRvxwE
+
+### create comment
+POST http://localhost:3001/api/blogs/6a24f3b642039fb7477baac4/comment
+Content-Type: application/json
+
+{
+  "comment": "this is a test comment"
+}

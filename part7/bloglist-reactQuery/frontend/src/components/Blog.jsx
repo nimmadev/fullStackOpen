@@ -1,24 +1,40 @@
-import { useNavigate } from "react-router-dom"
+import { useMatch, useNavigate } from "react-router-dom"
 import { Box, Link, Paper, Typography, Button } from "@mui/material"
 import { useBlog } from "./useBlog"
 import { useUser } from "../hooks/userHook"
+import { useNotify } from "../hooks/notificationHook"
+import { Comments } from "./Comments"
 
-const Blog = ({ blog }) => {
-  const { user } = useUser()
-  const { deleteB, like: likeBlog } = useBlog()
+const Blog = () => {
+  const { user, Logout } = useUser()
+  const { data: blogs, deleteB, like: likeBlog } = useBlog()
   const navigate = useNavigate()
+  const { updateNotification } = useNotify()
+  const blogId = useMatch("/blogs/:id")
+  const blog = blogId ? blogs.find((b) => b.id === blogId.params.id) : null
+
   if (!blog) {
     return null
   }
-  // console.log(user)
-
+  console.log(blog)
   const updateLike = (blog) => {
     const data = {
       ...blog,
       user: blog.user.id,
       likes: blog.likes + 1,
     }
-    likeBlog.mutate(data)
+    likeBlog.mutate(data, {
+      onError: (e) => {
+        if (e?.response?.data?.error === "token expired") {
+          Logout()
+          navigate("/login")
+        }
+        updateNotification({
+          message: e.response.data.error,
+          success: false,
+        })
+      },
+    })
   }
 
   const deleteBlog = async () => {
@@ -27,7 +43,19 @@ const Blog = ({ blog }) => {
         `remove blog ${blog.title} by ${blog.author}`,
       )
       if (confirm) {
-        deleteB.mutate(blog.id, { onSuccess: () => navigate("/") })
+        deleteB.mutate(blog.id, {
+          onSuccess: () => navigate("/"),
+          onError: (e) => {
+            if (e?.response?.data?.error === "token expired") {
+              Logout()
+              navigate("/login")
+            }
+            updateNotification({
+              message: e.response.data.error,
+              success: false,
+            })
+          },
+        })
       }
     } catch (e) {
       console.log(e, "error")
@@ -61,6 +89,7 @@ const Blog = ({ blog }) => {
             delete
           </Button>
         )}
+        <Comments comments={blog.comments} blogId={blog.id} />
       </>
     )
   }

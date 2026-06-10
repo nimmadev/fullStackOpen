@@ -18,6 +18,9 @@ const Nav = () => {
         <Button color="inherit" component={Link} to={"/"}>
           blogs
         </Button>
+        <Button color="inherit" component={Link} to={"/users"}>
+          users
+        </Button>
         {user === null && (
           <Button color="inherit" component={Link} to={"/login"}>
             login
@@ -28,7 +31,6 @@ const Nav = () => {
             create new
           </Button>
         )}
-
         {user !== null && (
           <Button color="inherit" onClick={logout}>
             logout
