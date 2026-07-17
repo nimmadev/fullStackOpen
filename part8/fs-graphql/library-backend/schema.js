@@ -10,6 +10,7 @@ const typeDefs = /* GraphQL */ `
     name: String!
     born: Int
     id: ID!
+    bookCount: Int
   }
   type User {
     username: String!
