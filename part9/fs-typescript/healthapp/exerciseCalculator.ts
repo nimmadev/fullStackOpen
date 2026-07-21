@@ -10,16 +10,19 @@ interface TrainingResult {
   average: number;
 }
 
-function calculateExercises(hours: number[], target: number): TrainingResult {
+export function calculateExercises(
+  daily_exercises: number[],
+  target: number,
+): TrainingResult {
   if (target <= 0) {
     throw new Error("Target must be greater than 0");
   }
-  if (hours.length === 0) {
+  if (daily_exercises.length === 0) {
     throw new Error("At least one day of exercise data is required.");
   }
-  const periodLength = hours.length;
-  const trainingDays = hours.filter((h) => h > 0).length;
-  const totalTraining = hours.reduce((acc, curr) => acc + curr, 0);
+  const periodLength = daily_exercises.length;
+  const trainingDays = daily_exercises.filter((h) => h > 0).length;
+  const totalTraining = daily_exercises.reduce((acc, curr) => acc + curr, 0);
   const average = totalTraining / periodLength;
   const success = average >= target;
   const shortfall = ((target - average) / target) * 100;
@@ -46,30 +49,30 @@ function calculateExercises(hours: number[], target: number): TrainingResult {
   };
 }
 
-interface ExerciseValue {
+export interface ExerciseValue {
   target: number;
-  hours: number[];
+  daily_exercises: number[];
 }
 
 function parseArguments(args: string[]): ExerciseValue {
   if (args.length < 4) throw new Error("minimum 2 args are required.");
   if (isNotNumber(args[2])) throw new Error("invalid args.");
-  let hours: number[] = [];
+  const daily_exercises: number[] = [];
   for (let i = 3; i < args.length; i++) {
     if (isNotNumber(args[i])) throw new Error("invalid args.");
-    hours.push(Number(args[i]));
+    daily_exercises.push(Number(args[i]));
   }
 
   return {
     target: Number(args[2]),
-    hours: hours,
+    daily_exercises,
   };
 }
 
 if (process.argv[1] === import.meta.filename) {
   try {
-    const { target, hours } = parseArguments(process.argv);
-    console.log(calculateExercises(hours, target));
+    const { target, daily_exercises } = parseArguments(process.argv);
+    console.log(calculateExercises(daily_exercises, target));
   } catch (error: unknown) {
     let errorMessage = "Something bad happend.";
     if (error instanceof Error) {
