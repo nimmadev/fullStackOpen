@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
-import { parseNewPatientEntry } from "./utils.ts";
+import { parseNewPatientEntry, parseNewEntry } from "./utils.ts";
 
 export const errorHandler = (
   error: unknown,
@@ -24,6 +24,19 @@ export const newPatientHandler = (
 ) => {
   try {
     parseNewPatientEntry.parse(req.body);
+    next();
+  } catch (error: unknown) {
+    next(error);
+  }
+};
+
+export const newEntryHandler = (
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+) => {
+  try {
+    parseNewEntry.parse(req.body);
     next();
   } catch (error: unknown) {
     next(error);

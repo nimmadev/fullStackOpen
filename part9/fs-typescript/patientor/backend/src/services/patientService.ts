@@ -3,6 +3,8 @@ import type {
   Patient,
   NonSensitiveInfoPatient,
   NewPatientEntry,
+  NewEntry,
+  Entry,
 } from "../types.ts";
 import { v1 as uuid } from "uuid";
 
@@ -21,8 +23,29 @@ const getNonSensitiveEntries = (): NonSensitiveInfoPatient[] => {
 };
 
 const addPatient = (entry: NewPatientEntry): Patient => {
-  const newPatient = { ...entry, id: uuid() };
+  const newPatient = { ...entry, id: uuid(), entries: [] };
   data.push(newPatient);
   return newPatient;
 };
-export default { getEntries, getNonSensitiveEntries, addPatient };
+
+const getPatient = (id: string): Patient | undefined => {
+  return data.find((entry) => entry.id === id);
+};
+
+const updatePatient = (patient: Patient, entry: NewEntry): Entry => {
+  const newEntry: Entry = {
+    id: uuid(),
+    ...entry,
+  };
+
+  patient.entries.push(newEntry);
+
+  return newEntry;
+};
+export default {
+  getEntries,
+  getNonSensitiveEntries,
+  addPatient,
+  getPatient,
+  updatePatient,
+};
