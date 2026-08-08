@@ -1,6 +1,8 @@
-import { Image, StyleSheet, View } from "react-native";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 import Text from "./Text";
 import theme from "../theme";
+import * as Linking from "expo-linking";
+import { Link } from "react-router-native";
 
 const styles = StyleSheet.create({
   conatiner: {
@@ -13,6 +15,12 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     padding: 10,
     borderRadius: 5,
+  },
+  Link: {
+    alignSelf: "stretch",
+    padding: 20,
+    borderRadius: 5,
+    textAlign: "center",
   },
   stats: { flexDirection: "row", justifyContent: "space-evenly" },
 });
@@ -46,30 +54,47 @@ const RepositoryItemStats = ({ item }) => {
   );
 };
 
-const Repositoryitem = ({ item }) => {
+const onLinkClick = async ({ url }) => {
+  await Linking.openURL(url);
+};
+
+const Repositoryitem = ({ item, github }) => {
   return (
-    <View style={styles.conatiner}>
-      <View style={{ flexDirection: "row", gap: 20 }}>
-        <Image
-          style={{
-            width: 60,
-            height: 60,
-            borderRadius: 3,
-          }}
-          source={item.ownerAvatarUrl}
-        />
-        <View style={{ flex: 1, marginTop: 10, gap: 10 }}>
-          <Text fontSize={"heading"} fontWeight={"bold"}>
-            {item.fullName}
-          </Text>
-          <Text fontSize={"heading"} color={"textSecondary"}>
-            {item.description}
-          </Text>
-          <Text style={styles.langText}>{item.language}</Text>
+    <Link to={`/repositorie/${item.id}`}>
+      <View style={styles.conatiner} testID="repositoryItem">
+        <View style={{ flexDirection: "row", gap: 20 }}>
+          <Image
+            style={{
+              width: 60,
+              height: 60,
+              borderRadius: 3,
+            }}
+            source={item.ownerAvatarUrl}
+          />
+          <View style={{ flex: 1, marginTop: 10, gap: 10 }}>
+            <Text fontSize={"heading"} fontWeight={"bold"}>
+              {item.fullName}
+            </Text>
+            <Text fontSize={"heading"} color={"textSecondary"}>
+              {item.description}
+            </Text>
+            <Text style={styles.langText}>{item.language}</Text>
+          </View>
         </View>
+        <RepositoryItemStats item={item} />
+        {github && (
+          <Pressable onPress={() => onLinkClick({ url: item.url })}>
+            <Text
+              style={[styles.langText, styles.Link]}
+              fontSize={"heading"}
+              fontWeight={"bold"}
+            >
+              Open in GitHub
+            </Text>
+          </Pressable>
+        )}
       </View>
-      <RepositoryItemStats item={item} />
-    </View>
+    </Link>
   );
 };
 
