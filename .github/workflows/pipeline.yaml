@@ -34,6 +34,8 @@ jobs:
           name: playwright-report
           path: ./part11/fs-pokedex/playwright-report
           retention-days: 30
+      - name: Trigger deployment
+        run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
 
 defaults:
   run:
