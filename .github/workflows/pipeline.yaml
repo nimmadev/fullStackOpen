@@ -38,6 +38,7 @@ jobs:
           path: ./part11/fs-pokedex/playwright-report
           retention-days: 30
       - name: Trigger deployment
+        if: ${{ contains(join(github.event.commits.*.message, ' '), '#skip') }}
         if: ${{ github.event_name == 'push' }}
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
   tag_release:
@@ -46,6 +47,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Bump version and push tag
+        if: ${{ contains(join(github.event.commits.*.message, ' '), '#skip') }}
         if: ${{ github.event_name == 'push' }}
         uses: anothrNick/github-tag-action@1.75.0
         env:
