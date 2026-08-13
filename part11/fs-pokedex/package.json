@@ -7,7 +7,7 @@
     "start": "webpack-dev-server --open --mode development --port 8080",
     "start-prod": "node app.js",
     "test": "jest",
-    "test-e2e": "npx playwright test --project=chromium",
+    "test:e2e": "npx playwright test --project=chromium",
     "eslint": "eslint './**/*.{js,jsx}'",
     "build": "webpack --mode production"
   },

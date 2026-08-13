@@ -36,7 +36,7 @@ module.exports = [
     },
   },
   {
-    files: ['playwright.config.js'],
+    files: ['playwright.config.js', 'e2e-tests/*.js'],
     languageOptions: {
       ecmaVersion: 2018,
       sourceType: 'module',
