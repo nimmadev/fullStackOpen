@@ -42,12 +42,12 @@ jobs:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      # - uses: actions/checkout@v6
       - name: Trigger deployment
         if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
   notify_failure:
-    needs: [deploy]
+    needs: [simple_deployment_pipeline, deploy]
     runs-on: ubuntu-latest
     steps:
       - uses: sarisia/actions-status-discord@v1
