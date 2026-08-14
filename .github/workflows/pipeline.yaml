@@ -55,6 +55,7 @@ jobs:
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           title: "Build failed"
+          color: 0xE74C3C
   notify_success:
     needs: [simple_deployment_pipeline, deploy]
     runs-on: ubuntu-latest
