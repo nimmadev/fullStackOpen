@@ -2,38 +2,38 @@
   "anecdotes": [
     {
       "content": "If it hurts, do it more often",
-      "id": "8tezagLcIw8",
+      "id": "OY0J4cjijxc",
       "votes": 0
-    },
-    {
-      "content": "Adding manpower to a late software project makes it later!",
-      "votes": 1,
-      "id": "bZMIlvLV1zU"
     },
     {
       "content": "If it hurts, do it more often",
-      "id": "P5Tam2xe7ow",
+      "id": "HyFY8l67_YY",
       "votes": 0
     },
     {
       "content": "Adding manpower to a late software project makes it later!",
       "votes": 1,
-      "id": "hELhALJ8jcw"
+      "id": "fSGw8_eOtxU"
+    },
+    {
+      "content": "Adding manpower to a late software project makes it later!",
+      "votes": 1,
+      "id": "Ss8-latcjwE"
     },
     {
       "content": "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
-      "id": "mXs53yWYZLI",
+      "id": "1m0oRXsMq48",
       "votes": 2
     },
     {
       "content": "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
-      "id": "FU-Z4Q4arBw",
+      "id": "VrYGppa-F-w",
       "votes": 2
     },
     {
       "content": "this is a test",
       "votes": 0,
-      "id": "0CDVyZy6-Ck"
+      "id": "9uaA3DY2Z6E"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
