@@ -14,4 +14,6 @@ Start by running `npm install` inside the project folder
 
 [live website link](https://fullstackopen-hnnw.onrender.com/)
 
+[app repo](../../part6/zustand-anecdotes/)
+
 # this is test for pull request
