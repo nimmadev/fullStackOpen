@@ -47,7 +47,7 @@ jobs:
         if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
   notify_failure:
-    needs: [simple_deployment_pipeline, deploy]
+    needs: [deploy]
     runs-on: ubuntu-latest
     steps:
       - uses: sarisia/actions-status-discord@v1
@@ -56,7 +56,7 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           title: "Build failed"
   notify_success:
-    needs: [deploy]
+    needs: [simple_deployment_pipeline, deploy]
     runs-on: ubuntu-latest
     steps:
       - uses: sarisia/actions-status-discord@v1
@@ -65,7 +65,7 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           title: "Successful deployment"
   tag_release:
-    needs: [deploy]
+    needs: [simple_deployment_pipeline, deploy]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
