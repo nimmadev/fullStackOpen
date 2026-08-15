@@ -1,6 +1,11 @@
 {
   "anecdotes": [
     {
+      "content": "this require a review from Matti Luukkainen",
+      "id": "8tezlgLcIw8",
+      "votes": 1000000
+    },
+    {
       "content": "If it hurts, do it more often",
       "id": "OY0J4cjijxc",
       "votes": 0
